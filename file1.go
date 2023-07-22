@@ -2,9 +2,12 @@ package main
 
 import (
 	"time"
+
+	proto "github.com/golang/protobuf/proto"
 )
 
 var msgChan = make(chan string)
+var msgChan2 = make(chan proto.Message)
 
 func main() {
 	go sendMsg()
@@ -13,5 +16,12 @@ func main() {
 
 func sendMsg() {
 	time.Sleep(2 * time.Second)
-	msgChan <- "Hello from file1.go"
+	msg := "Hello from file1.go"
+	msgChan <- msg
+
+	elliot := &Person{
+		Name: "Elliot",
+		Age:  24,
+	}
+	msgChan2 <- elliot
 }
