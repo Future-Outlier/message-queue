@@ -8,7 +8,8 @@ import (
 )
 
 var msgChan = make(chan string)
-var msgChan2 = make(chan []byte)
+var msgChanByte = make(chan []byte)
+var msgChanProto = make(chan proto.Message)
 
 func main() {
 	go sendMsg()
@@ -25,23 +26,26 @@ func sendMsg() {
 		Age:  24,
 	}
 	data, err := proto.Marshal(elliot)
+	// here prove that I should use msgChanByte and Unmarshal it
+	fmt.Println("message string", elliot.String())
 	if err == nil {
-		msgChan2 <- data
+		msgChanByte <- data
 	}
-	fmt.Printf("type of a is %T\n", *elliot)
+	fmt.Println("type of a is %T\n", *elliot)
 
-	var m proto.Message
-	m = elliot
-	if _, ok := m.(*Person); ok {
-		fmt.Println(" ok elliot is of type proto.Message")
-	} else {
-		fmt.Println("elliot is NOT of type proto.Message")
-	}
+	msgChanProto <- elliot
+	// var m proto.Message
+	// m = elliot
+	// if _, ok := m.(*Person); ok {
+	// 	fmt.Println(" ok elliot is of type proto.Message")
+	// } else {
+	// 	fmt.Println("elliot is NOT of type proto.Message")
+	// }
 
-	if proto.MessageName(elliot) != "" {
-		fmt.Println(" MessageName elliot is of type proto.Message")
-	} else {
-		fmt.Println("elliot is NOT of type proto.Message")
-	}
+	// if proto.MessageName(elliot) != "" {
+	// 	fmt.Println(" MessageName elliot is of type proto.Message")
+	// } else {
+	// 	fmt.Println("elliot is NOT of type proto.Message")
+	// }
 
 }
