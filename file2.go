@@ -3,6 +3,8 @@ package main
 
 import (
 	"fmt"
+
+	proto "github.com/golang/protobuf/proto"
 )
 
 func receiveMsg() {
@@ -10,8 +12,11 @@ func receiveMsg() {
 		select {
 		case msg := <-msgChan:
 			fmt.Println("Received:", msg)
-		case <-msgChan2:
-			fmt.Println("Received Elliot")
+		case data := <-msgChan2: // 修改此行
+			newBody := &Person{}
+			err := proto.Unmarshal(data, newBody) // 修改此行
+			fmt.Println("Received Elliot", err)
+			fmt.Println("Received Elliot", newBody.Age, newBody.Name)
 		default:
 			// panic("No messages received")
 			// fmt.Println("No messages received")
